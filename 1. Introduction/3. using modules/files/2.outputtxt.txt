@@ -1,0 +1,2 @@
+hello this is text that you read from file
+this text will be shown in new file. in output file

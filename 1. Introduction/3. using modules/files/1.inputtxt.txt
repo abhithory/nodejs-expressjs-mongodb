@@ -1,0 +1,1 @@
+hello this is text that you read from file
