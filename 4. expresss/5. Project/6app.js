@@ -1,4 +1,4 @@
-// creating and mounting multiple routers
+// better file structure approch
 const express = require('express');
 const fs = require("fs");
 const morgan = require("morgan");
