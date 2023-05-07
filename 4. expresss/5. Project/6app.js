@@ -10,6 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'))
 
+// serving static files in express
+// http://localhost:3000/public/homepage.html
+app.use("/public",express.static(`${__dirname}/public`))
+
 app.use((req, res, next) => {
     console.log("hi i am middleware");
     next();
