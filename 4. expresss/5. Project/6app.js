@@ -10,6 +10,8 @@ const app = express();
 app.use(express.json());
 app.use(morgan('dev'))
 
+console.log(process.env.NODE_ENV);
+
 // serving static files in express
 // http://localhost:3000/public/homepage.html
 app.use("/public",express.static(`${__dirname}/public`))
