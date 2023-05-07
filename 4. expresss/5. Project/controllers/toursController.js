@@ -2,6 +2,18 @@ const fs = require("fs");
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`))
 
 
+const checkBody = (req, res, next) => {
+    const { name, price } = req.body;
+    if (!name || !price) {
+        return res.status(400).json({
+            status: "error",
+
+        })
+    }
+    next();
+}
+
+
 const checkId = (req,res,next,val) => {
     const id = Number(req.params.id)
     const tour = tours.find(item => item.id === id);
@@ -63,4 +75,4 @@ const deleteTour = (req, res) => {
 }
 
 
-module.exports = {getAllTours,getOneTour,createTour,patchTour,deleteTour,checkId}
+module.exports = {getAllTours,getOneTour,createTour,patchTour,deleteTour,checkId,checkBody}

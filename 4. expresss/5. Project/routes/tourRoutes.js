@@ -1,20 +1,20 @@
 const express = require('express');
-const { getAllTours, createTour, getOneTour, patchTour, deleteTour, checkId } = require('../controllers/toursController');
+const { getAllTours, createTour, getOneTour, patchTour, deleteTour, checkId, checkBody } = require('../controllers/toursController');
 const router = express.Router();
 
 // Param Middleware
-router.param("id",(req,res,next,val) => {
+router.param("id", (req, res, next, val) => {
     console.log("Tour id is:", val);
     next();
 })
 
-router.param("id",checkId)
+router.param("id", checkId)
 
 
 router
     .route("/")
     .get(getAllTours)
-    .post(createTour)
+    .post(checkBody, createTour)
 
 router
     .route("/:id")
