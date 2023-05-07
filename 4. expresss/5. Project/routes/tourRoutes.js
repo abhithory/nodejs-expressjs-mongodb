@@ -1,7 +1,14 @@
 const express = require('express');
-const { getAllTours, createTour, getOneTour, patchTour, deleteTour } = require('../controllers/toursController');
+const { getAllTours, createTour, getOneTour, patchTour, deleteTour, checkId } = require('../controllers/toursController');
 const router = express.Router();
 
+// Param Middleware
+router.param("id",(req,res,next,val) => {
+    console.log("Tour id is:", val);
+    next();
+})
+
+router.param("id",checkId)
 
 
 router

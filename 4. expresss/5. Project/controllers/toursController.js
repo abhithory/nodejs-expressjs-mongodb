@@ -2,6 +2,19 @@ const fs = require("fs");
 const tours = JSON.parse(fs.readFileSync(`${__dirname}/../data/tours.json`))
 
 
+const checkId = (req,res,next,val) => {
+    const id = Number(req.params.id)
+    const tour = tours.find(item => item.id === id);
+
+    if (!tour) {
+        return res.status(404).json({
+            status: "fail",
+            message: "invailid ID"
+        })
+    }
+    next();
+}
+
 const getAllTours = (req, res) => {
 
     res.status(200).json({
@@ -16,13 +29,6 @@ const getAllTours = (req, res) => {
 const getOneTour = (req, res) => {
     const id = Number(req.params.id)
     const tour = tours.find(item => item.id === id);
-
-    if (!tour) {
-        return res.status(404).json({
-            status: "fail",
-            message: "invailid ID"
-        })
-    }
     res.status(200).json({
         status: "success",
         data: {
@@ -40,12 +46,6 @@ const patchTour = (req, res) => {
     const id = Number(req.params.id)
     const body = req.body;
     const tour = tours.find(item => item.id === id);
-    if (!tour) {
-        return res.status(404).json({
-            status: "fail",
-            message: "invailid ID"
-        })
-    }
     // here update in database
     res.status(200).json({
         status: "success", data: {
@@ -56,12 +56,6 @@ const patchTour = (req, res) => {
 const deleteTour = (req, res) => {
     const id = Number(req.params.id)
     const tour = tours.find(item => item.id === id);
-    if (!tour) {
-        return res.status(404).json({
-            status: "fail",
-            message: "invailid ID"
-        })
-    }
     // here update in database
     res.status(200).json({
         status: "success", data: null
@@ -69,4 +63,4 @@ const deleteTour = (req, res) => {
 }
 
 
-module.exports = {getAllTours,getOneTour,createTour,patchTour,deleteTour}
+module.exports = {getAllTours,getOneTour,createTour,patchTour,deleteTour,checkId}
