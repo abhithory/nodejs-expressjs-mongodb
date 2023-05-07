@@ -1,0 +1,17 @@
+{
+  "name": "express-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon 3app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "morgan": "^1.10.0",
+    "nodemon": "^2.0.22"
+  }
+}
