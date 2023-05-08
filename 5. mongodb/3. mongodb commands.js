@@ -71,7 +71,11 @@
 // db.tours.updateMany({price: {$gt:500}, rating:{$gte:4.8}}, {$set:{premium:true}})
 
 
+// ------ deleting values
 
+// db.tours.deleteOne({rating: {$lt:4.8}})
+
+// db.tours.deleteMany({rating: {$lt:4.8}})
 
 // ----- deleting documents
 
