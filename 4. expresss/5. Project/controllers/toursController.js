@@ -1,21 +1,32 @@
 const Tour = require("../Model/tourModel");
 
 
-const getAllTours = (req, res) => {
+const getAllTours = async (req, res) => {
+    try {
 
-    res.status(200).json({
-        status: "success",
-        time: req.requestTimeNow,
-    })
+        const allTours = await Tour.find();
+
+        return res.status(200).json({
+            status: "success",
+            results: allTours.length,
+            data: allTours
+        })
+    } catch (error) {
+        return res.status(400).json({ status: "fail", data: error })
+    }
 }
-const getOneTour = (req, res) => {
-    const id = Number(req.params.id)
-    res.status(200).json({
-        status: "success",
-        data: {
-            id
-        }
-    })
+const getOneTour = async (req, res) => {
+    try {
+        const id = req.params.id;
+        console.log("dfasdfs", id);
+        const oneTour = await Tour.findById(id);
+        return res.status(200).json({
+            status: "success",
+            data: oneTour
+        })
+    } catch (error) {
+        return res.status(400).json({ status: "fail", data: error })
+    }
 }
 const createTour = async (req, res) => {
     const body = req.body;
