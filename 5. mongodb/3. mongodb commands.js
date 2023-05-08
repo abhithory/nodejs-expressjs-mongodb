@@ -62,4 +62,16 @@
 // db.tours.find({$or: [{price:{$lt:500}},{rating: {$gte:4.8}}]},{name:0})
 
 
-// 
+// -----updating values
+
+
+
+// db.tours.updateOne({ name: "the snow adventurer" }, { $set: { price: 597 } })
+
+// db.tours.updateMany({price: {$gt:500}, rating:{$gte:4.8}}, {$set:{premium:true}})
+
+
+
+
+// ----- deleting documents
+
