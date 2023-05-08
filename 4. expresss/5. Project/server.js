@@ -4,6 +4,7 @@ dotenv.config({ path: "./config.env" });
 // this config should be above app require
 
 const app = require("./6app");
+const { text } = require('express');
 
 // enviroment variable by expressjs
 // console.log(app.get('env'));
@@ -45,9 +46,16 @@ const tourSchema = new mongoose.Schema({
 
 const Tour = mongoose.model('Tour', tourSchema);
 
+const testTour = new Tour({
+  name: "The Park Camper",
+  price: 997
+})
 
-
-
+testTour.save().then(doc => {
+  console.log(doc);
+}).catch(err => {
+  console.log("error", err);
+})
 
 
 
