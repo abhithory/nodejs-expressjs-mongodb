@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const dotenv = require("dotenv");
 dotenv.config({ path: "./config.env" });
 // this config should be above app require
@@ -13,6 +14,13 @@ const app = require("./6app");
 
 // setting envroment variables
 // VARIABALE_NAME=VALUE npm run start
+
+const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSWORD);
+
+mongoose.connect(DB).then(con => {
+  // console.log(con.connection);
+  console.log("Connected succefully");
+})
 
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
