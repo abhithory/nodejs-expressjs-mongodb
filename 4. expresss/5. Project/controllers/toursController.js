@@ -124,5 +124,54 @@ const tourStats = async (req, res) => {
     }
 }
 
+const getMountlyPlan = async (req, res) => {
+    try {
+        const year = req.params.year;
 
-module.exports = { getAllTours, getOneTour, createTour, patchTour, deleteTour, aliasTopTours, tourStats }
+        const mountlyPlan = await Tour.aggregate([
+            {
+                $unwind: '$startDates'
+            },
+            {
+                $match: {
+                    startDates: {
+                        $gte: new Date(`${year}-01-01`),
+                        $lte: new Date(`${year}-12-31`)
+                    }
+                }
+            },
+            {
+                $group: {
+                    _id: { $month: '$startDates' },
+                    numTourStarts: { $sum: 1 },
+                    tours: { $push: '$name' }
+                }
+            },
+            {
+                $addFields: { mounth: '$_id' }
+            },
+            {
+                $project: {
+                    _id: 0
+                }
+            },
+            {
+                $sort: { numTourStarts: -1 }
+            },
+            {
+                $limit: 6
+            }
+        ])
+
+        res.status(200).json({
+            status: "success", data: mountlyPlan
+        })
+    } catch (error) {
+        return res.status(400).json({ status: "fail", data: error })
+    }
+}
+
+
+
+
+module.exports = { getAllTours, getOneTour, createTour, patchTour, deleteTour, aliasTopTours, tourStats, getMountlyPlan }

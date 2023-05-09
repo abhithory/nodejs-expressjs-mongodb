@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTours, createTour, getOneTour, patchTour, deleteTour, aliasTopTours, tourStats } = require('../controllers/toursController');
+const { getAllTours, createTour, getOneTour, patchTour, deleteTour, aliasTopTours, tourStats, getMountlyPlan } = require('../controllers/toursController');
 const router = express.Router();
 
 // Param Middleware
@@ -25,6 +25,12 @@ router
 router
     .route("/tour-stats")
     .get(tourStats)
+
+router
+    .route("/mountly-plan/:year")
+    .get(getMountlyPlan)
+
+
 router
     .route("/:id")
     .get(getOneTour)
