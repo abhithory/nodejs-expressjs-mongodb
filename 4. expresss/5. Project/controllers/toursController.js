@@ -1,4 +1,5 @@
 const Tour = require("../Model/tourModel");
+const APIFeatures = require("../utils/apiFeatures");
 
 const aliasTopTours = (req, res, next) => {
     req.query.limit = "5";
@@ -9,57 +10,8 @@ const aliasTopTours = (req, res, next) => {
 
 const getAllTours = async (req, res) => {
     try {
-
-        // localhost:3000/api/v1/tours?duration[gte]=1&difficulty=easy&sort=1&price[lt]=1200
-
-        // Build query
-        let queryObj = { ...req.query };
-        // 1B) Basic filtring
-        const excludedFields = ["page", "sort", "limit", "fields"]
-        excludedFields.forEach(el => delete queryObj[el]);
-
-        // 1A) Advance Filtring
-        let queryStr = JSON.stringify(queryObj);
-        queryStr = queryStr.replace(/(gte|gt|lte|lt)\b/g, match => `$${match}`);
-        queryObj = JSON.parse(queryStr);
-
-        let query = Tour.find(queryObj);
-
-        // 2) sorting
-        if (req.query.sort) {
-            // localhost:3000/api/v1/tours?sort=duration,-maxGroupSize
-            console.log(req.query.sort);
-            const sortBy = req.query.sort.split(',').join(" ");
-            console.log(sortBy);
-            query = query.sort(sortBy);
-
-        } else {
-            query = query.sort("-createdAt")
-        }
-
-        // 3) Field selection
-
-        if (req.query.fields) {
-            const fields = req.query.fields.split(",").join(" ");
-            query = query.select(fields)
-        } else {
-            query = query.select("-__v")
-        }
-
-
-        // 4) Pagination
-        const page = req.query.page || 1;
-        const limit = req.query.limit || 15;
-        const skip = (page - 1) * limit;
-        console.log(page, limit, skip);
-        query = query.skip(skip).limit(limit);
-        if (req.query.page) {
-            const numTours = await Tour.countDocuments();
-            if (skip >= numTours) throw Error("this page does not exit");
-        }
-
-
-        const tours = await query;
+        const apiFeatures = new APIFeatures(Tour.find(), req.query).filtering().sort().fields().pagination();
+        const tours = await apiFeatures.query;
         // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
         return res.status(200).json({
             status: "success",
@@ -99,7 +51,6 @@ const createTour = async (req, res) => {
     // })
 
     try {
-
         const newTour = await Tour.create(req.body);
 
         // here save the tour in data base
