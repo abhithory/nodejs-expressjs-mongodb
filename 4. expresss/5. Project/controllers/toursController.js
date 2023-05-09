@@ -3,8 +3,8 @@ const Tour = require("../Model/tourModel");
 
 const getAllTours = async (req, res) => {
     try {
-
         const allTours = await Tour.find();
+        console.log(allTours);
 
         return res.status(200).json({
             status: "success",
@@ -54,15 +54,23 @@ const createTour = async (req, res) => {
 
     }
 }
-const patchTour = (req, res) => {
-    const id = Number(req.params.id)
-    const body = req.body;
-    // here update in database
-    res.status(200).json({
-        status: "success", data: {
-            tour: "updated tour"
-        }
-    })
+const patchTour = async (req, res) => {
+    try {
+        const id = req.params.id;
+        const body = req.body;
+
+        const newTour = await Tour.findByIdAndUpdate(id, body, {
+            new: true,
+            runValidators: true
+        })
+        // here update in database
+        res.status(200).json({
+            status: "success", data: newTour
+        })
+    } catch (error) {
+        return res.status(400).json({ status: "fail", data: error })
+
+    }
 }
 const deleteTour = (req, res) => {
     const id = Number(req.params.id)
