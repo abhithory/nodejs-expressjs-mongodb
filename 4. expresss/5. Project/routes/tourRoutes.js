@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAllTours, createTour, getOneTour, patchTour, deleteTour } = require('../controllers/toursController');
+const { getAllTours, createTour, getOneTour, patchTour, deleteTour, aliasTopTours } = require('../controllers/toursController');
 const router = express.Router();
 
 // Param Middleware
@@ -11,10 +11,13 @@ const router = express.Router();
 // router.param("id", checkId)
 
 
+
 router
     .route("/")
     .get(getAllTours)
     .post(createTour)
+
+router.route("/top-5-cheap").get(aliasTopTours, getAllTours);
 
 router
     .route("/:id")
