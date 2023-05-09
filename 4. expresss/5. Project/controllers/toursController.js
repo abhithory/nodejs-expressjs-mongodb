@@ -41,6 +41,18 @@ const getAllTours = async (req, res) => {
         }
 
 
+        // 4) Pagination
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 15;
+        const skip = (page - 1) * limit;
+        console.log(page, limit, skip);
+        query = query.skip(skip).limit(limit);
+        if (req.query.page) {
+            const numTours = await Tour.countDocuments();
+            if (skip >= numTours) throw Error("this page does not exit");
+        }
+
+
         const tours = await query;
         // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
         return res.status(200).json({
