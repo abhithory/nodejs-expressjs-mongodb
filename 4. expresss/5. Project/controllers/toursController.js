@@ -3,13 +3,23 @@ const Tour = require("../Model/tourModel");
 
 const getAllTours = async (req, res) => {
     try {
-        const allTours = await Tour.find();
-        console.log(allTours);
+        // Build query
 
+        // localhost:3000/api/v1/tours?duration=5&difficulty=easy&sort=1&limit=12
+
+        const queryObj = { ...req.query };
+        const excludedFields = ["page", "sort", "limit", "fields"]
+        excludedFields.forEach(el => delete queryObj[el]);
+
+        const query = Tour.find(queryObj);
+
+        // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
+
+        const tours = await query;
         return res.status(200).json({
             status: "success",
-            results: allTours.length,
-            data: allTours
+            results: tours.length,
+            data: tours
         })
     } catch (error) {
         return res.status(400).json({ status: "fail", data: error })
