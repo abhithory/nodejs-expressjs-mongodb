@@ -3,19 +3,23 @@ const Tour = require("../Model/tourModel");
 
 const getAllTours = async (req, res) => {
     try {
+
+        // localhost:3000/api/v1/tours?duration[gte]=1&difficulty=easy&sort=1&price[lt]=1200
+
         // Build query
-
-        // localhost:3000/api/v1/tours?duration=5&difficulty=easy&sort=1&limit=12
-
-        const queryObj = { ...req.query };
+        let queryObj = { ...req.query };
+        // 1) Basic filtring
         const excludedFields = ["page", "sort", "limit", "fields"]
         excludedFields.forEach(el => delete queryObj[el]);
 
+        // 2) Advance Filtring
+        let queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(/(gte|gt|lte|lt)\b/g, match => `$${match}`);
+        queryObj = JSON.parse(queryStr);
+
         const query = Tour.find(queryObj);
-
-        // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
-
         const tours = await query;
+        // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
         return res.status(200).json({
             status: "success",
             results: tours.length,
