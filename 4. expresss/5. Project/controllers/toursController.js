@@ -8,16 +8,30 @@ const getAllTours = async (req, res) => {
 
         // Build query
         let queryObj = { ...req.query };
-        // 1) Basic filtring
+        // 1B) Basic filtring
         const excludedFields = ["page", "sort", "limit", "fields"]
         excludedFields.forEach(el => delete queryObj[el]);
 
-        // 2) Advance Filtring
+        // 1A) Advance Filtring
         let queryStr = JSON.stringify(queryObj);
         queryStr = queryStr.replace(/(gte|gt|lte|lt)\b/g, match => `$${match}`);
         queryObj = JSON.parse(queryStr);
 
-        const query = Tour.find(queryObj);
+        let query = Tour.find(queryObj);
+
+        // 2) sorting
+        if (req.query.sort) {
+            // localhost:3000/api/v1/tours?sort=duration,-maxGroupSize
+            console.log(req.query.sort);
+            const sortBy = req.query.sort.split(',').join(" ");
+            console.log(sortBy);
+            query = query.sort(sortBy);
+
+        } else {
+            query = query.sort("-createdAt")
+        }
+
+
         const tours = await query;
         // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
         return res.status(200).json({
