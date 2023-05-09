@@ -72,12 +72,17 @@ const patchTour = async (req, res) => {
 
     }
 }
-const deleteTour = (req, res) => {
-    const id = Number(req.params.id)
-    // here update in database
-    res.status(200).json({
-        status: "success", data: null
-    })
+const deleteTour = async (req, res) => {
+
+    try {
+        const id = req.params.id
+        const newTour = await Tour.findOneAndDelete(id);
+        res.status(200).json({
+            status: "success", data: newTour
+        })
+    } catch (error) {
+        return res.status(400).json({ status: "fail", data: error })
+    }
 }
 
 
