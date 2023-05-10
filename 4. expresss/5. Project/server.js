@@ -3,8 +3,14 @@ const dotenv = require("dotenv");
 dotenv.config();
 // this config should be above app require
 
+process.on("uncaughtException", err => {
+  console.log(err);
+  console.log("uncaughtException! Shutting down...");
+  process.exit(1)
+})
+
+
 const app = require("./6app");
-const { text } = require('express');
 
 // enviroment variable by expressjs
 // console.log(app.get('env'));
@@ -21,6 +27,8 @@ const DB = process.env.DATABASE.replace("<PASSWORD>", process.env.DATABASE_PASSW
 mongoose.connect(DB).then(con => {
   // console.log(con.connection);
   console.log("Connected succefully");
+}).catch(err => {
+  console.log("Error while connecting to DB", err);
 })
 
 
@@ -36,20 +44,8 @@ const server = app.listen(port, () => {
 process.on("unhandledRejection", err => {
   console.log(err.name, err.message);
   console.log("Unhandled rejection! Shutting down...");
-
   server.close(() => {
     process.exit(1)
   })
 })
 
-
-process.on("uncaughtException", err => {
-  console.log(err.name, err.message);
-  console.log("uncaughtException! Shutting down...");
-
-  server.close(() => {
-    process.exit(1)
-  })
-})
-
-console.log(x);
