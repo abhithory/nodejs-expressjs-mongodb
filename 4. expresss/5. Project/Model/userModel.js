@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
-
-const tourSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     name: {
         type: String,
         required: [true, "name is required"],
@@ -27,12 +27,27 @@ const tourSchema = new mongoose.Schema({
     passwordConfirm: {
         type: String,
         required: [true, "password confirm is required"],
-        minLength: 8
+        minLength: 8,
+        validate: {
+            validator: function (el) {
+                return el === this.password;
+            },
+            message: "passwords are not the same"
+        }
     },
-
-
-
 })
 
-const User = mongoose.model("User", tourSchema);
+
+userSchema.pre('save', async function (next) {
+    // this will run if only the password is actually modified
+    if (!this.isModified('password')) return next();
+
+    // hash the password with cost of 12
+    this.password = await bcrypt.hash(this.password, 12);
+    // Delete password Confrim field
+    this.passwordConfirm = undefined;
+})
+
+
+const User = mongoose.model("User", userSchema);
 module.exports = User;
