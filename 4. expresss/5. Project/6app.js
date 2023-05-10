@@ -26,10 +26,26 @@ app.use("/api/v1/tours", tourRoutes)
 app.use("/api/v1/users", userRoutes)
 
 app.all("*", (req, res, next) => {
-    return res.status(404).json({
-        status: "failer", data: `this ${req.originalUrl} route not defined`
-    })
+    // return res.status(404).json({
+    //     status: "failer", data: `this ${req.originalUrl} route not defined`
+    // })
 
+    const err = new Error(`this ${req.originalUrl} route not defined`);
+    err.status = "fail";
+    err.statusCode = 404;
+    next(err);
+})
+
+
+// error handling route
+app.use((err, req, res, next) => {
+    err.statusCode = err.statusCode || 500;
+    err.status = err.status || "error";
+
+    return res.status(err.statusCode).json({
+        status: err.status,
+        message: err.message
+    })
 })
 
 
