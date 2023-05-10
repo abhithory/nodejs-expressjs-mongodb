@@ -35,4 +35,4 @@ const tourSchema = new mongoose.Schema({
 })
 
 const User = mongoose.model("User", tourSchema);
-exports.default = User;
+module.exports = User;
