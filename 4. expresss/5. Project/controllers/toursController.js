@@ -1,7 +1,7 @@
 const Tour = require("../Model/tourModel");
 const APIFeatures = require("../utils/apiFeatures");
 const AppError = require("../utils/appError");
-const CatchAsync = require("../utils/catchAsync");
+const catchAsync = require("../utils/catchAsync");
 
 const aliasTopTours = (req, res, next) => {
     req.query.limit = "5";
@@ -10,7 +10,7 @@ const aliasTopTours = (req, res, next) => {
     next();
 }
 
-const getAllTours = CatchAsync(async (req, res, next) => {
+const getAllTours = catchAsync(async (req, res, next) => {
     const apiFeatures = new APIFeatures(Tour.find(), req.query)
         .filtering()
         .sort()
@@ -24,7 +24,7 @@ const getAllTours = CatchAsync(async (req, res, next) => {
         data: tours
     })
 })
-const getOneTour = CatchAsync(async (req, res, next) => {
+const getOneTour = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const oneTour = await Tour.findById(id);
 
@@ -37,13 +37,13 @@ const getOneTour = CatchAsync(async (req, res, next) => {
     })
 })
 
-const createTour = CatchAsync(async (req, res, next) => {
+const createTour = catchAsync(async (req, res, next) => {
     const newTour = await Tour.create(req.body);
     return res.status(200).json({ status: "success", data: newTour })
 })
 
 
-const patchTour = CatchAsync(async (req, res, next) => {
+const patchTour = catchAsync(async (req, res, next) => {
     const id = req.params.id;
     const body = req.body;
     const oneTour = await Tour.findByIdAndUpdate(id, body, {
@@ -60,7 +60,7 @@ const patchTour = CatchAsync(async (req, res, next) => {
     })
 })
 
-const deleteTour = CatchAsync(async (req, res, next) => {
+const deleteTour = catchAsync(async (req, res, next) => {
 
     const id = req.params.id
     const oneTour = await Tour.findByIdAndDelete(id);
@@ -73,7 +73,7 @@ const deleteTour = CatchAsync(async (req, res, next) => {
     })
 })
 
-const tourStats = CatchAsync(async (req, res, next) => {
+const tourStats = catchAsync(async (req, res, next) => {
     const newTour = await Tour.aggregate([
         {
             $match: { ratingAverage: { $gte: 4.5 } }
@@ -102,7 +102,7 @@ const tourStats = CatchAsync(async (req, res, next) => {
     })
 })
 
-const getMountlyPlan = CatchAsync(async (req, res, next) => {
+const getMountlyPlan = catchAsync(async (req, res, next) => {
     const year = req.params.year;
     const mountlyPlan = await Tour.aggregate([
         {
