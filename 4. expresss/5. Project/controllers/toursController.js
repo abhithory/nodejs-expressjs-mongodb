@@ -10,7 +10,18 @@ const aliasTopTours = (req, res, next) => {
 
 const getAllTours = async (req, res) => {
     try {
-        const apiFeatures = new APIFeatures(Tour.find(), req.query).filtering().sort().fields().pagination();
+               const apiSort= new APIFeatures(Tour.find(), req.query)
+        .filtering()
+        .sort()
+
+        const toursSort = await apiSort.query;
+
+
+        const apiFeatures = new APIFeatures(Tour.find(), req.query)
+        .filtering()
+        .sort()
+        .fields()
+        .pagination();
         const tours = await apiFeatures.query;
         // const query = Tour.find().where("duration").equals(5).where("difficulty").equals("easy");
         return res.status(200).json({
